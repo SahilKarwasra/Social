@@ -31,7 +31,7 @@ class _SignupPageState extends State<SignupPage> {
     final authCubit = context.read<AuthCubit>();
 
     // Check if email and password are not empty
-    if (email.isNotEmpty && password.isNotEmpty) {
+    if (email.isNotEmpty && password.isNotEmpty && username.isNotEmpty) {
       // Signup
       authCubit.registerWithEmailAndPassword(email, password, username);
     }
@@ -41,6 +41,14 @@ class _SignupPageState extends State<SignupPage> {
         content: Text('Please enter email and password'),
       ));
     }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    usernameController.dispose();
+    super.dispose();
   }
 
   @override

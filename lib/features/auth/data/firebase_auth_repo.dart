@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social/features/auth/domain/repository/auth_repo.dart';
 
@@ -24,7 +25,8 @@ class FirebaseAuthRepo implements AuthRepo {
   }
 
   @override
-  Future<AppUser?> registerWithEmailAndPassword(String email, String password, String name) async {
+  Future<AppUser?> registerWithEmailAndPassword(
+      String email, String password, String name) async {
     try {
       // attempt sign up
       UserCredential credential = await firebaseAuth
@@ -33,6 +35,12 @@ class FirebaseAuthRepo implements AuthRepo {
       // Create User
       AppUser user =
           AppUser(uid: credential.user!.uid, email: email, name: name);
+
+      // Save User Data in Firebase Firestore Database
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set(user.toJson());
 
       // Return User
       return user;

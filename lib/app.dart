@@ -6,7 +6,7 @@ import 'features/auth/data/firebase_auth_repo.dart';
 import 'features/auth/presentation/cubits/auth_cubits.dart';
 import 'features/auth/presentation/cubits/auth_states.dart';
 import 'features/auth/presentation/pages/auth_page.dart';
-import 'features/post/presentation/pages/home_page.dart';
+import 'features/post/presentation/pages/main_home_page.dart';
 
 class MyApp extends StatelessWidget {
   // Auth Repo
@@ -24,11 +24,10 @@ class MyApp extends StatelessWidget {
         theme: lightMode,
         home: BlocConsumer<AuthCubit, AuthStates>(
           builder: (context, authState) {
-            print(authState);
 
             // if user is authenticated, navigate to home page
             if (authState is Authenticated) {
-              return const HomePage();
+              return const MainHomePage();
             }
 
             // if user is not authenticated, navigate to auth page

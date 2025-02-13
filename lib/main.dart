@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:social/features/auth/presentation/pages/login_page.dart';
+import 'package:social/features/auth/presentation/pages/auth_page.dart';
 import 'package:social/firebase_options.dart';
 import 'package:social/themes/light_mode.dart';
 
@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: lightMode,
-      home: const LoginPage(),
+      home: const AuthPage(),
     );
   } 
 }

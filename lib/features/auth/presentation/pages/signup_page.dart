@@ -3,23 +3,22 @@ import 'package:flutter/material.dart';
 import '../components/c_button.dart';
 import '../components/c_textfields.dart';
 
-class LoginPage extends StatefulWidget {
+class SignupPage extends StatefulWidget {
   final void Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const SignupPage({super.key, required this.onTap});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  // text controllers
+class _SignupPageState extends State<SignupPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
+  final usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -50,7 +49,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 30),
 
-                // Email and Password TextFields
+                // Username, Email and Password TextFields
+                CTextfields(
+                  controller: usernameController,
+                  hintText: 'Username',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 22),
                 CTextfields(
                   controller: emailController,
                   hintText: 'Email',
@@ -67,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                 // Button for login
                 CButton(
                   onTap: () {},
-                  text: "Login",
+                  text: "SignUp",
                 ),
 
                 SizedBox(height: 50,),
@@ -77,25 +82,25 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "New to Social?",
-                      style: TextStyle(
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary,
-                      )
-                    ),
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: Text(
-                        " Register Now",
+                        "Already have an Account? ",
                         style: TextStyle(
                           color: Theme
                               .of(context)
                               .colorScheme
-                              .inversePrimary,
-                          fontWeight: FontWeight.bold,
+                              .primary,
                         )
+                    ),
+                    GestureDetector(
+                      onTap: widget.onTap,
+                      child: Text(
+                          "Login",
+                          style: TextStyle(
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .inversePrimary,
+                            fontWeight: FontWeight.bold,
+                          )
                       ),
                     ),
                   ],

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../components/c_button.dart';
 import '../components/c_textfields.dart';
+import '../cubits/auth_cubits.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
+
   const LoginPage({super.key, required this.onTap});
 
   @override
@@ -16,6 +19,37 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  // Login function
+  void login() {
+    // grab Email and password from textfields
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    // Grab Auth Cubit
+    final authCubit = context.read<AuthCubit>();
+
+    // Check if email and password are not empty
+    if (email.isNotEmpty && password.isNotEmpty) {
+      // Login
+      authCubit.loginWithEmailAndPassword(email, password);
+    }
+
+    // display error message if email and password are empty
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter email and password'),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 // Logo of the app
                 Image.asset(
                   'assets/images/social.png',
@@ -42,10 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                   'Welcome to Social!',
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -66,38 +96,30 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Button for login
                 CButton(
-                  onTap: () {},
+                  onTap: login,
                   text: "Login",
                 ),
 
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 50,
+                ),
 
                 // Text for signup
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "New to Social?",
-                      style: TextStyle(
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary,
-                      )
-                    ),
+                    Text("New to Social?",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        )),
                     GestureDetector(
                       onTap: widget.onTap,
-                      child: Text(
-                        " Register Now",
-                        style: TextStyle(
-                          color: Theme
-                              .of(context)
-                              .colorScheme
-                              .inversePrimary,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                    ),
+                      child: Text(" Register Now",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    )
                   ],
                 )
               ],

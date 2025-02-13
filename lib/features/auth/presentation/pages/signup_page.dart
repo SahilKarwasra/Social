@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../components/c_button.dart';
 import '../components/c_textfields.dart';
+import '../cubits/auth_cubits.dart';
 
 class SignupPage extends StatefulWidget {
   final void Function()? onTap;
+
   const SignupPage({super.key, required this.onTap});
 
   @override
@@ -12,13 +15,37 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  // SignUp controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
 
+  // Signup Functions
+  void signup() {
+    // grab username email password from Textfield controllers
+    final String username = usernameController.text;
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    // grab Auth Cubit
+    final authCubit = context.read<AuthCubit>();
+
+    // Check if email and password are not empty
+    if (email.isNotEmpty && password.isNotEmpty) {
+      // Signup
+      authCubit.registerWithEmailAndPassword(email, password, username);
+    }
+    // display error message if email and password are empty
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please enter email and password'),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -26,7 +53,6 @@ class _SignupPageState extends State<SignupPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 // Logo of the app
                 Image.asset(
                   'assets/images/social.png',
@@ -41,10 +67,7 @@ class _SignupPageState extends State<SignupPage> {
                   'Welcome to Social!',
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -69,39 +92,31 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 22),
 
-                // Button for login
+                // Button for Signup
                 CButton(
-                  onTap: () {},
+                  onTap: signup,
                   text: "SignUp",
                 ),
 
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 50,
+                ),
 
                 // Text for signup
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                        "Already have an Account? ",
+                    Text("Already have an Account? ",
                         style: TextStyle(
-                          color: Theme
-                              .of(context)
-                              .colorScheme
-                              .primary,
-                        )
-                    ),
+                          color: Theme.of(context).colorScheme.primary,
+                        )),
                     GestureDetector(
                       onTap: widget.onTap,
-                      child: Text(
-                          "Login",
+                      child: Text("Login",
                           style: TextStyle(
-                            color: Theme
-                                .of(context)
-                                .colorScheme
-                                .inversePrimary,
+                            color: Theme.of(context).colorScheme.inversePrimary,
                             fontWeight: FontWeight.bold,
-                          )
-                      ),
+                          )),
                     ),
                   ],
                 )

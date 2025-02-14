@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../components/home.dart';
-import '../components/profile.dart';
-import '../components/search.dart';
+import 'features/home/presentation/pages/home.dart';
+import 'features/home/presentation/components/search.dart';
+import 'features/profile/presentation/profile.dart';
 
-class MainHomePage extends StatefulWidget {
-  const MainHomePage({super.key});
+class MainPageWithBottomBar extends StatefulWidget {
+  const MainPageWithBottomBar({super.key});
 
   @override
-  State<MainHomePage> createState() => _MainHomePageState();
+  State<MainPageWithBottomBar> createState() => _MainPageWithBottomBarState();
 }
 
-class _MainHomePageState extends State<MainHomePage> {
+class _MainPageWithBottomBarState extends State<MainPageWithBottomBar> {
   int _selectedIndex = 0;
 
   void _navigateBottomBar(int index) {

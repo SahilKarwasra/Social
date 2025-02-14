@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'features/home/presentation/pages/home.dart';
 import 'features/home/presentation/components/search.dart';
-import 'features/profile/presentation/profile.dart';
+import 'features/profile/presentation/pages/profile.dart';
 
 class MainPageWithBottomBar extends StatefulWidget {
   const MainPageWithBottomBar({super.key});

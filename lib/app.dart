@@ -9,6 +9,7 @@ import 'features/auth/presentation/pages/auth_page.dart';
 import 'features/home/presentation/pages/home_screen.dart';
 import 'features/profile/data/firebase_profile_repo.dart';
 import 'features/profile/presentation/cubits/profile_cubit.dart';
+import 'features/storage/data/supabase_storage_repo.dart';
 
 class MyApp extends StatelessWidget {
   // Auth Repo
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
 
   // Profile Repo
   final profileRepo = FirebaseProfileRepo();
+
+  // Storage Repo
+  final storageRepo = SupabaseStorageRepo();
 
   MyApp({super.key});
 
@@ -31,7 +35,10 @@ class MyApp extends StatelessWidget {
 
         // Profile Cubit
         BlocProvider<ProfileCubit>(
-          create: (context) => ProfileCubit(profileRepo: profileRepo),
+          create: (context) => ProfileCubit(
+            profileRepo: profileRepo,
+            storageRepo: storageRepo,
+          ),
         )
       ],
       child: MaterialApp(

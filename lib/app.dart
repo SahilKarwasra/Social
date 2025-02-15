@@ -6,28 +6,42 @@ import 'features/auth/data/firebase_auth_repo.dart';
 import 'features/auth/presentation/cubits/auth_cubits.dart';
 import 'features/auth/presentation/cubits/auth_states.dart';
 import 'features/auth/presentation/pages/auth_page.dart';
-import 'main_page_with_bottom_bar.dart';
+import 'features/home/presentation/pages/home_screen.dart';
+import 'features/profile/data/firebase_profile_repo.dart';
+import 'features/profile/presentation/cubits/profile_cubit.dart';
 
 class MyApp extends StatelessWidget {
   // Auth Repo
   final authRepo = FirebaseAuthRepo();
 
+  // Profile Repo
+  final profileRepo = FirebaseProfileRepo();
+
   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Providing Cubit to our app
-    return BlocProvider(
-      create: (context) => AuthCubit(authRepo: authRepo)..checkAuthStatus(),
+    // Providing Multiple Cubit to our app
+    return MultiBlocProvider(
+      providers: [
+        // Auth Cubit
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(authRepo: authRepo)..checkAuthStatus(),
+        ),
+
+        // Profile Cubit
+        BlocProvider<ProfileCubit>(
+          create: (context) => ProfileCubit(profileRepo: profileRepo),
+        )
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: lightMode,
         home: BlocConsumer<AuthCubit, AuthStates>(
           builder: (context, authState) {
-
             // if user is authenticated, navigate to home page
             if (authState is Authenticated) {
-              return const MainPageWithBottomBar();
+              return const HomeScreen();
             }
 
             // if user is not authenticated, navigate to auth page

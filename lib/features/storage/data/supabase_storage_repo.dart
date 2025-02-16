@@ -38,6 +38,7 @@ class SupabaseStorageRepo implements StorageRepo {
           _supabase.storage.from(_bucketName).getPublicUrl(filePath);
       return publicUrl;
     } catch (e) {
+      print("Upload error: $e");
       return null;
     }
   }

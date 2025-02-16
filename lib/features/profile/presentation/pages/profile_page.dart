@@ -93,8 +93,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 // loaded
                 imageBuilder: (context, imageProvider) => Container(
-                  height: 150,
-                  width: 150,
+                  height: 200,
+                  width: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(

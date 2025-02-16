@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/features/auth/domain/entities/app_users.dart';
@@ -77,19 +78,29 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
 
               // Profile Pic
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
+              CachedNetworkImage(
+                imageUrl: loadedUser.profileImageUrl,
+                // loading..
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+
+                // error..
+                errorWidget: (context, url, error) => Icon(
+                  Icons.person,
+                  size: 72,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                height: 120,
-                width: 120,
-                padding: const EdgeInsets.all(25),
-                child: Center(
-                  child: Icon(
-                    Icons.person,
-                    size: 72,
-                    color: Theme.of(context).colorScheme.primary,
+
+                // loaded
+                imageBuilder: (context, imageProvider) => Container(
+                  height: 150,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -141,6 +152,17 @@ class _ProfilePageState extends State<ProfilePage> {
             child: CircularProgressIndicator(),
           ),
         );
+      } else if (state is ProfileError) {
+        return Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(state.error),
+          ElevatedButton(
+            onPressed: () =>
+                context.read<ProfileCubit>().fetchProfileUsers(widget.uid),
+            child: Text("Retry"),
+          )
+        ]));
       } else {
         return const Scaffold(
           body: Center(

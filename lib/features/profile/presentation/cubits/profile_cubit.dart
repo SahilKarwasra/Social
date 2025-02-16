@@ -1,11 +1,18 @@
+import 'dart:typed_data';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/features/profile/domain/repository/profile_repository.dart';
 import 'package:social/features/profile/presentation/cubits/profile_states.dart';
+import 'package:social/features/storage/domain/storage_repo.dart';
 
 class ProfileCubit extends Cubit<ProfileStates> {
   final ProfileRepo profileRepo;
+  final StorageRepo storageRepo;
 
-  ProfileCubit({required this.profileRepo}) : super(ProfileInitial());
+  ProfileCubit({
+    required this.profileRepo,
+    required this.storageRepo,
+  }) : super(ProfileInitial());
 
   // fetch profile users using repository
   Future<void> fetchProfileUsers(String uid) async {
@@ -27,6 +34,8 @@ class ProfileCubit extends Cubit<ProfileStates> {
   Future<void> updateProfileUsers({
     required String uid,
     String? newBio,
+    Uint8List? imageWebBytes,
+    String? imageMobilePath,
   }) async {
     emit(ProfileLoading());
     try {
@@ -37,10 +46,36 @@ class ProfileCubit extends Cubit<ProfileStates> {
         return;
       }
       // update profile picture
+      String? imageDownloadUrl;
+      final fileName = "${uid}_profile";
 
-      // update bio
-      final updatedProfileUser =
-          currentUser.copyWith(bio: newBio ?? currentUser.bio);
+      // Ensuring that their is a pic to upload
+      if (imageWebBytes != null || imageMobilePath != null) {
+        // for mobile
+        if (imageMobilePath != null) {
+          // upload pic
+
+          imageDownloadUrl = await storageRepo.uploadProfilePicMobile(
+              imageMobilePath, fileName);
+        }
+        // for web
+        else if (imageWebBytes != null) {
+          // upload pic
+          imageDownloadUrl =
+              await storageRepo.uploadProfilePicWeb(imageWebBytes, fileName);
+        }
+
+        if (imageDownloadUrl == null) {
+          emit(ProfileError("Image upload failed"));
+          return;
+        }
+      }
+
+      // update new profile
+      final updatedProfileUser = currentUser.copyWith(
+        bio: newBio ?? currentUser.bio,
+        imageUrl: imageDownloadUrl ?? currentUser.profileImageUrl,
+      );
 
       // update in repository
       await profileRepo.updateProfileUsers(updatedProfileUser);
@@ -49,6 +84,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
       await fetchProfileUsers(uid);
     } catch (e) {
       emit(ProfileError("Error updating profile: $e"));
+      await fetchProfileUsers(uid);
     }
   }
 }

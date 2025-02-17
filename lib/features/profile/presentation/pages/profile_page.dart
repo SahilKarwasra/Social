@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/features/auth/domain/entities/app_users.dart';
 import 'package:social/features/auth/presentation/cubits/auth_cubits.dart';
+import 'package:social/features/post/presentation/components/post_tile.dart';
+import 'package:social/features/post/presentation/cubits/post_cubit.dart';
+import 'package:social/features/post/presentation/cubits/post_states.dart';
 import 'package:social/features/profile/presentation/components/c_bio_box.dart';
 
 import '../cubits/profile_cubit.dart';
@@ -25,6 +28,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // grab current user from cubit
   late AppUser? currentUser = authCubit.currentUser;
+
+  // posts
+  int postCount = 0;
 
   // on startup
   @override
@@ -65,12 +71,15 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
 
           // Body of the screen
-          body: Column(
+          body: ListView(
             children: [
               // Email of the user
-              Text(
-                loadedUser.email,
-                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              Center(
+                child: Text(
+                  loadedUser.email,
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
+                ),
               ),
 
               const SizedBox(
@@ -140,6 +149,52 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              // list of posts of user
+              BlocBuilder<PostCubit, PostsStates>(
+                builder: (context, state) {
+                  // posts loaded
+                  if (state is PostsLoaded) {
+                    // filer posts by userId
+                    final userPosts = state.posts
+                        .where((posts) => posts.userId == widget.uid)
+                        .toList();
+
+                    // count posts
+                    postCount = userPosts.length;
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: postCount,
+                      itemBuilder: (context, index) {
+                        // get individual post
+                        final post = userPosts[index];
+
+                        // return post tile UI
+                        return PostTile(
+                          post: post,
+                          onDelete: () =>
+                              context.read<PostCubit>().deletePost(post.id),
+                        );
+                      },
+                    );
+                  }
+
+                  // posts loading
+                  else if (state is PostsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return const Center(
+                      child: Text("No Posts ;(."),
+                    );
+                  }
+                },
+              )
             ],
           ),
         );

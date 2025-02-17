@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social/features/post/domain/entity/comments.dart';
 import 'package:social/features/post/domain/entity/post.dart';
 import 'package:social/features/post/domain/repository/post_repo.dart';
 import 'package:social/features/post/presentation/cubits/post_states.dart';
@@ -16,11 +17,8 @@ class PostCubit extends Cubit<PostsStates> {
   }) : super(PostsInitial());
 
   // creating a new post
-  Future<void> createPost(
-    Post post, {
-    String? imagePath,
-    Uint8List? imageBytes,
-  }) async {
+  Future<void> createPost(Post post,
+      {String? imagePath, Uint8List? imageBytes}) async {
     String? imageUrl;
     try {
       // handle image upload from mobile storage
@@ -70,6 +68,26 @@ class PostCubit extends Cubit<PostsStates> {
       await postRepo.toggleLikePost(postId, userId);
     } catch (e) {
       emit(PostsError("Something went wrong while toggling like: $e"));
+    }
+  }
+
+  // add comment to the post
+  Future<void> addComment(String postId, Comment comment) async {
+    try {
+      await postRepo.addComment(postId, comment);
+      await fetchAllPosts();
+    } catch (e) {
+      emit(PostsError("Something went wrong while adding comment: $e"));
+    }
+  }
+
+  // delete comment from the post
+  Future<void> deleteComment(String postId, String commentId) async {
+    try {
+      await postRepo.deleteComment(postId, commentId);
+      await fetchAllPosts();
+    } catch (e) {
+      emit(PostsError("Something went wrong while deleting comment: $e"));
     }
   }
 }

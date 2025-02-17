@@ -8,23 +8,36 @@ class SupabaseStorageRepo implements StorageRepo {
   final SupabaseClient _supabase = Supabase.instance.client;
   final String _bucketName = "images";
 
+  // Upload Profile Pics to SupaBase
   @override
   Future<String?> uploadProfilePicMobile(String path, String fileName) async {
-    return await _uploadFile(path, fileName);
+    return await _uploadFile(path, fileName, "profile_pics");
   }
 
   @override
   Future<String?> uploadProfilePicWeb(
       Uint8List fileBytes, String fileName) async {
-    return await _uploadFileBytes(fileBytes, fileName);
+    return await _uploadFileBytes(fileBytes, fileName, "profile_pics");
+  }
+
+  // Upload Posts to SupaBase
+  @override
+  Future<String?> uploadPostPicMobile(String path, String fileName) async {
+    return await _uploadFile(path, fileName, "post_pics");
+  }
+
+  @override
+  Future<String?> uploadPostPicWeb(Uint8List fileBytes, String fileName) async {
+    return await _uploadFileBytes(fileBytes, fileName, "post_pics");
   }
 
   // Helper methods for mobile platform (File)
-  Future<String?> _uploadFile(String path, String fileName) async {
+  Future<String?> _uploadFile(
+      String path, String fileName, String folderName) async {
     try {
       // Get the file from local storage
       final file = File(path);
-      final filePath = "profile_pics/$fileName";
+      final filePath = "$folderName/$fileName";
 
       // Upload the file to Supabase storage
       await _supabase.storage.from(_bucketName).upload(
@@ -44,9 +57,10 @@ class SupabaseStorageRepo implements StorageRepo {
   }
 
   // Helper Method for web platform (Uint8List)
-  Future<String?> _uploadFileBytes(Uint8List fileBytes, String fileName) async {
+  Future<String?> _uploadFileBytes(
+      Uint8List fileBytes, String fileName, String folderName) async {
     try {
-      final filePath = "profile_pics/$fileName";
+      final filePath = "$folderName/$fileName";
 
       // Upload the file bytes to Supabase storage
       await _supabase.storage.from(_bucketName).uploadBinary(

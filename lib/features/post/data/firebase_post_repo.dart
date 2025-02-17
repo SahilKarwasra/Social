@@ -13,8 +13,14 @@ class FirebasePostRepo implements PostRepo {
   @override
   Future<void> createPost(Post post) async {
     try {
-      await postsCollection.doc(post.id).set(post.toJson);
+      print('Creating post with ID: ${post.id}'); // Debug: Post ID
+      print('Post data: ${post.toJson()}'); // Debug: Post JSON data
+
+      await postsCollection.doc(post.id).set(post.toJson());
+
+      print('Post successfully created!'); // Debug: Success message
     } catch (e) {
+      print('Error while creating post: $e'); // Debug: Error message
       throw Exception('Error while creating post: $e');
     }
   }

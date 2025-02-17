@@ -30,16 +30,18 @@ class Post {
   }
 
   // Convert post into json
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'userId': userId,
-        'userName': userName,
-        'text': text,
-        'imageUrl': imageUrl,
-        'timestamp': Timestamp.fromDate(timestamp),
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'userName': userName,
+      'text': text,
+      'imageUrl': imageUrl,
+      'timestamp': Timestamp.fromDate(timestamp),
+    };
+  }
 
-  // Convert json into post
+// Convert json into post
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json['id'],

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social/features/post/data/firebase_post_repo.dart';
 import 'package:social/themes/light_mode.dart';
-
 import 'features/auth/data/firebase_auth_repo.dart';
 import 'features/auth/presentation/cubits/auth_cubits.dart';
 import 'features/auth/presentation/cubits/auth_states.dart';
 import 'features/auth/presentation/pages/auth_page.dart';
 import 'features/home/presentation/pages/home_screen.dart';
+import 'features/post/presentation/cubits/post_cubit.dart';
 import 'features/profile/data/firebase_profile_repo.dart';
 import 'features/profile/presentation/cubits/profile_cubit.dart';
 import 'features/storage/data/supabase_storage_repo.dart';
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
 
   // Storage Repo
   final storageRepo = SupabaseStorageRepo();
+
+  // Post repo
+  final postRepo = FirebasePostRepo();
 
   MyApp({super.key});
 
@@ -39,7 +43,15 @@ class MyApp extends StatelessWidget {
             profileRepo: profileRepo,
             storageRepo: storageRepo,
           ),
-        )
+        ),
+
+        // Post Cubit
+        BlocProvider<PostCubit>(
+          create: (context) => PostCubit(
+            postRepo: postRepo,
+            storageRepo: storageRepo,
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

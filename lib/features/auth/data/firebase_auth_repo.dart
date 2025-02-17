@@ -8,14 +8,25 @@ class FirebaseAuthRepo implements AuthRepo {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<AppUser?> loginWithEmailAndPassword(String email, String password) async {
+  Future<AppUser?> loginWithEmailAndPassword(
+      String email, String password) async {
     // Attempt Sign in
     try {
       UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 
+      // Fetch user document from firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(credential.user!.uid)
+          .get();
+
       // Create User
-      AppUser user = AppUser(uid: credential.user!.uid, email: email, name: "");
+      AppUser user = AppUser(
+        uid: credential.user!.uid,
+        email: email,
+        name: userDoc['name'],
+      );
 
       // Return User
       return user;
@@ -63,8 +74,17 @@ class FirebaseAuthRepo implements AuthRepo {
     if (user == null) {
       return null;
     }
+    // Fetch user document from firestore
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .get();
+    // check if user document exists
+    if (!userDoc.exists) {
+      return null;
+    }
 
     // Create User
-    return AppUser(uid: user.uid, email: user.email!, name: '');
+    return AppUser(uid: user.uid, email: user.email!, name: userDoc['name']);
   }
 }

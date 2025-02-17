@@ -25,7 +25,7 @@ Social is a minimalist social media application built using Flutter. It supports
 ### Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/social.git
+   git clone https://github.com/SahilKarwasra/social.git
    cd social
    ```
 2. Install dependencies:

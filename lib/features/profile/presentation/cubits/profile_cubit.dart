@@ -94,4 +94,14 @@ class ProfileCubit extends Cubit<ProfileStates> {
       await fetchProfileUsers(uid);
     }
   }
+
+  // Toggle follow / unfollow user
+  Future<void> toggleFollow(String currentUid, String targetUid) async {
+    try {
+      await profileRepo.toggleFollow(currentUid, targetUid);
+      await fetchProfileUsers(targetUid);
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
 }

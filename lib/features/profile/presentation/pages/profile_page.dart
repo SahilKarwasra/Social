@@ -7,6 +7,7 @@ import 'package:social/features/post/presentation/components/post_tile.dart';
 import 'package:social/features/post/presentation/cubits/post_cubit.dart';
 import 'package:social/features/post/presentation/cubits/post_states.dart';
 import 'package:social/features/profile/presentation/components/c_bio_box.dart';
+import 'package:social/features/profile/presentation/components/c_follow_button.dart';
 
 import '../cubits/profile_cubit.dart';
 import '../cubits/profile_states.dart';
@@ -118,6 +119,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 25,
               ),
 
+              // follow unfollow button
+              CFollowButton(isFollowing: false, onPressed: () {}),
               // Bio of the user
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),

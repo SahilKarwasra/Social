@@ -3,6 +3,8 @@ import 'package:social/features/auth/domain/entities/app_users.dart';
 class ProfileUsers extends AppUser {
   final String bio;
   final String profileImageUrl;
+  final List<String> followers;
+  final List<String> following;
 
   ProfileUsers({
     required super.uid,
@@ -10,16 +12,24 @@ class ProfileUsers extends AppUser {
     required super.name,
     required this.bio,
     required this.profileImageUrl,
+    required this.followers,
+    required this.following,
   });
 
   // Function to update profile users
-  ProfileUsers copyWith({String? bio, String? imageUrl}) {
+  ProfileUsers copyWith(
+      {String? bio,
+      String? imageUrl,
+      List<String>? newfollowers,
+      List<String>? newfollowing}) {
     return ProfileUsers(
       uid: uid,
       email: email,
       name: name,
       bio: bio ?? this.bio,
-      profileImageUrl: imageUrl ?? this.profileImageUrl,
+      profileImageUrl: imageUrl ?? profileImageUrl,
+      followers: newfollowers ?? followers,
+      following: newfollowing ?? following,
     );
   }
 
@@ -31,6 +41,8 @@ class ProfileUsers extends AppUser {
       'name': name,
       'bio': bio,
       'profileImageUrl': profileImageUrl,
+      'followers': followers,
+      'following': following,
     };
   }
 
@@ -42,6 +54,8 @@ class ProfileUsers extends AppUser {
       name: json['name'],
       bio: json['bio'],
       profileImageUrl: json['profileImageUrl'] ?? '',
+      followers: List<String>.from(json['followers'] ?? []),
+      following: List<String>.from(json['following'] ?? []),
     );
   }
 }

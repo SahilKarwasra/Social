@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social/features/profile/domain/entities/profile_users.dart';
 import 'package:social/features/profile/domain/repository/profile_repository.dart';
 import 'package:social/features/profile/presentation/cubits/profile_states.dart';
 import 'package:social/features/storage/domain/storage_repo.dart';
@@ -14,7 +15,7 @@ class ProfileCubit extends Cubit<ProfileStates> {
     required this.storageRepo,
   }) : super(ProfileInitial());
 
-  // fetch profile users using repository
+  // fetch profile users using repository it is useful for loading single profile pics only since it don't return anything
   Future<void> fetchProfileUsers(String uid) async {
     try {
       emit(ProfileLoading());
@@ -28,6 +29,12 @@ class ProfileCubit extends Cubit<ProfileStates> {
     } catch (e) {
       emit(ProfileError(e.toString()));
     }
+  }
+
+  // return user profile by given uid it is useful for loading multiple profile for posts
+  Future<ProfileUsers?> getUsersProfile(String uid) async {
+    final user = await profileRepo.getProfileUsers(uid);
+    return user;
   }
 
   // update profile users using repository

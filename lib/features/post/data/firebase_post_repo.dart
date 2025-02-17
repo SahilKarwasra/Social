@@ -67,4 +67,33 @@ class FirebasePostRepo implements PostRepo {
   Future<void> deletePost(String postId) async {
     await postsCollection.doc(postId).delete();
   }
+
+  @override
+  Future<void> toggleLikePost(String postId, String userId) async {
+    try {
+      // get the post document from firestore
+      final postDoc = await postsCollection.doc(postId).get();
+
+      if (postDoc.exists) {
+        final post = Post.fromJson(postDoc.data() as Map<String, dynamic>);
+
+        // Check if user has already liked the post
+        final hasLiked = post.likes.contains(userId);
+
+        // update the likes list
+        if (hasLiked) {
+          post.likes.remove(userId); // unlike the post if already liked
+        } else {
+          post.likes.add(userId); // like the post if not liked
+        }
+
+        // update the post in firestore
+        await postsCollection.doc(postId).update({'likes': post.likes});
+      } else {
+        throw Exception('Post not found');
+      }
+    } catch (e) {
+      throw Exception('Error while toggling like: $e');
+    }
+  }
 }

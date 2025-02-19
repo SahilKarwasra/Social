@@ -42,7 +42,7 @@ Social is a minimalist social media application built using Flutter. It supports
 Contributions are welcome! Feel free to open an issue or submit a pull request.
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](https://github.com/SahilKarwasra/Social/blob/master/LICENSE).
 
 ---
 Happy coding! 🚀

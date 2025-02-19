@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social/features/search/presentation/pages/search_page.dart';
 
 import '../../../auth/presentation/cubits/auth_cubits.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -65,7 +66,10 @@ class CDrawer extends StatelessWidget {
               CDrawerTile(
                 title: 'S E A R C H',
                 icon: Icons.search,
-                onTap: () {},
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SearchPage())),
               ),
 
               // Settings option tile

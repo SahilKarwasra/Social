@@ -8,6 +8,8 @@ import 'package:social/features/post/presentation/cubits/post_cubit.dart';
 import 'package:social/features/post/presentation/cubits/post_states.dart';
 import 'package:social/features/profile/presentation/components/c_bio_box.dart';
 import 'package:social/features/profile/presentation/components/c_follow_button.dart';
+import 'package:social/features/profile/presentation/components/c_profile_stats.dart';
+import 'package:social/features/profile/presentation/pages/followers_page.dart';
 
 import '../cubits/profile_cubit.dart';
 import '../cubits/profile_states.dart';
@@ -136,28 +138,43 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 // loaded
                 imageBuilder: (context, imageProvider) => Container(
-                  height: 200,
-                  width: 200,
+                  height: 150,
+                  width: 150,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       image: imageProvider,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitHeight,
+                      alignment: Alignment.center,
                     ),
                   ),
                 ),
               ),
+              const SizedBox(height: 25),
 
+              // Profile Stats
+              CProfileStats(
+                postCount: postCount,
+                followersCount: loadedUser.followers.length,
+                followingCount: loadedUser.following.length,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FollowersPage(
+                      followers: loadedUser.followers,
+                      following: loadedUser.following,
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 25),
 
               // follow unfollow button
-
               if (!ifOwnProfile)
                 CFollowButton(
                   isFollowing: loadedUser.followers.contains(currentUser!.uid),
                   onPressed: pressFollowButton,
                 ),
-
               const SizedBox(height: 25),
 
               // Bio of the user

@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/features/auth/presentation/components/c_textfields.dart';
 import 'package:social/features/profile/domain/entities/profile_users.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:social/responsive/constrained_scaffold.dart';
 
 import '../cubits/profile_cubit.dart';
 import '../cubits/profile_states.dart';
@@ -81,7 +82,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       builder: (context, state) {
         // Profile Loading
         if (state is ProfileLoading) {
-          return Scaffold(
+          return ConstrainedScaffold(
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

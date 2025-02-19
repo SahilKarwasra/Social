@@ -6,7 +6,7 @@ ThemeData darkMode = ThemeData(
     primary: Color.fromARGB(255, 105, 105, 105),
     secondary: Color.fromARGB(255, 20, 20, 20),
     tertiary: Color.fromARGB(255, 29, 29, 29),
-    inversePrimary: Color.fromARGB(255, 195, 195, 195),
+    inversePrimary: Color.fromARGB(255, 161, 155, 155),
   ),
   scaffoldBackgroundColor: const Color.fromARGB(255, 9, 9, 9),
 );

@@ -10,6 +10,7 @@ import 'package:social/features/profile/presentation/components/c_bio_box.dart';
 import 'package:social/features/profile/presentation/components/c_follow_button.dart';
 import 'package:social/features/profile/presentation/components/c_profile_stats.dart';
 import 'package:social/features/profile/presentation/pages/followers_page.dart';
+import 'package:social/responsive/constrained_scaffold.dart';
 
 import '../cubits/profile_cubit.dart';
 import '../cubits/profile_states.dart';
@@ -84,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
         final loadedUser = state.profileUser;
 
         // Main Profile Scaffold
-        return Scaffold(
+        return ConstrainedScaffold(
           appBar: AppBar(
             title: Text(loadedUser.name),
             foregroundColor: Theme.of(context).colorScheme.primary,

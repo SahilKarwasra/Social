@@ -5,6 +5,7 @@ import 'package:social/features/post/presentation/components/post_tile.dart';
 import 'package:social/features/post/presentation/cubits/post_cubit.dart';
 import 'package:social/features/post/presentation/cubits/post_states.dart';
 import 'package:social/features/post/presentation/pages/upload_post_page.dart';
+import 'package:social/responsive/constrained_scaffold.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,11 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ConstrainedScaffold(
         appBar: AppBar(
           title: const Text('Home Page'),
           foregroundColor: Theme.of(context).colorScheme.primary,
           centerTitle: true,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           actions: [
             IconButton(
               icon: Icon(Icons.add),

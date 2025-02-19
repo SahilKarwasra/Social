@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/features/profile/presentation/components/c_user_tile.dart';
 import 'package:social/features/search/presentation/cubits/search_states.dart';
+import 'package:social/responsive/constrained_scaffold.dart';
 
 import '../cubits/search_cubit.dart';
 
@@ -35,7 +36,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ConstrainedScaffold(
       appBar: AppBar(
         title: TextField(
           controller: searchController,

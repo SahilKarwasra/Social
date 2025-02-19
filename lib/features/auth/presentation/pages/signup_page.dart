@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social/responsive/constrained_scaffold.dart';
 
 import '../components/c_button.dart';
 import '../components/c_textfields.dart';
@@ -53,7 +54,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ConstrainedScaffold(
       body: SafeArea(
         child: Center(
           child: Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/features/search/presentation/pages/search_page.dart';
+import 'package:social/features/settings/page/setting_page.dart';
 
 import '../../../auth/presentation/cubits/auth_cubits.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -76,7 +77,11 @@ class CDrawer extends StatelessWidget {
               CDrawerTile(
                 title: 'S E T T I N G S',
                 icon: Icons.settings,
-                onTap: () {},
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingPage(),
+                    )),
               ),
 
               const Spacer(),

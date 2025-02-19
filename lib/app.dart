@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/features/post/data/firebase_post_repo.dart';
 import 'package:social/features/search/data/firebase_search_repo.dart';
 import 'package:social/features/search/presentation/cubits/search_cubit.dart';
-import 'package:social/themes/light_mode.dart';
+import 'package:social/themes/theme_cubit.dart';
+
 import 'features/auth/data/firebase_auth_repo.dart';
 import 'features/auth/presentation/cubits/auth_cubits.dart';
 import 'features/auth/presentation/cubits/auth_states.dart';
@@ -36,67 +37,75 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Providing Multiple Cubit to our app
     return MultiBlocProvider(
-      providers: [
-        // Auth Cubit
-        BlocProvider<AuthCubit>(
-          create: (context) => AuthCubit(authRepo: authRepo)..checkAuthStatus(),
-        ),
-
-        // Profile Cubit
-        BlocProvider<ProfileCubit>(
-          create: (context) => ProfileCubit(
-            profileRepo: profileRepo,
-            storageRepo: storageRepo,
+        providers: [
+          // Auth Cubit
+          BlocProvider<AuthCubit>(
+            create: (context) =>
+                AuthCubit(authRepo: authRepo)..checkAuthStatus(),
           ),
-        ),
 
-        // Post Cubit
-        BlocProvider<PostCubit>(
-          create: (context) => PostCubit(
-            postRepo: postRepo,
-            storageRepo: storageRepo,
+          // Profile Cubit
+          BlocProvider<ProfileCubit>(
+            create: (context) => ProfileCubit(
+              profileRepo: profileRepo,
+              storageRepo: storageRepo,
+            ),
           ),
-        ),
 
-        // Search Cubit
-        BlocProvider<SearchCubit>(
-          create: (context) => SearchCubit(searchRepo: searchRepo),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: lightMode,
-        home: BlocConsumer<AuthCubit, AuthStates>(
-          builder: (context, authState) {
-            // if user is authenticated, navigate to home page
-            if (authState is Authenticated) {
-              return const HomeScreen();
-            }
+          // Post Cubit
+          BlocProvider<PostCubit>(
+            create: (context) => PostCubit(
+              postRepo: postRepo,
+              storageRepo: storageRepo,
+            ),
+          ),
 
-            // if user is not authenticated, navigate to auth page
-            else if (authState is Unauthenticated) {
-              return const AuthPage();
-            }
+          // Search Cubit
+          BlocProvider<SearchCubit>(
+            create: (context) => SearchCubit(searchRepo: searchRepo),
+          ),
 
-            // if user is loading, show loading screen
-            else if (authState is AuthLoading) {
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
+          // Theme Cubit
+          BlocProvider<ThemeCubit>(
+            create: (context) => ThemeCubit(),
+          ),
+        ],
+        child: BlocBuilder<ThemeCubit, ThemeData>(
+          builder: (context, currentTheme) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: currentTheme,
+            home: BlocConsumer<AuthCubit, AuthStates>(
+              builder: (context, authState) {
+                // if user is authenticated, navigate to home page
+                if (authState is Authenticated) {
+                  return const HomeScreen();
+                }
 
-            // Default case (Prevents returning null)
-            return const Scaffold(
-              body: Center(
-                child: Text("Something went wrong. Please restart the app."),
-              ),
-            );
-          },
-          listener: (context, state) {},
-        ),
-      ),
-    );
+                // if user is not authenticated, navigate to auth page
+                else if (authState is Unauthenticated) {
+                  return const AuthPage();
+                }
+
+                // if user is loading, show loading screen
+                else if (authState is AuthLoading) {
+                  return const Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+
+                // Default case (Prevents returning null)
+                return const Scaffold(
+                  body: Center(
+                    child:
+                        Text("Something went wrong. Please restart the app."),
+                  ),
+                );
+              },
+              listener: (context, state) {},
+            ),
+          ),
+        ));
   }
 }

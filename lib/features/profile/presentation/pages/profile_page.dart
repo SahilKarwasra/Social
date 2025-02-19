@@ -41,8 +41,40 @@ class _ProfilePageState extends State<ProfilePage> {
     profileCubit.fetchProfileUsers(widget.uid);
   }
 
+  void pressFollowButton() {
+    final profileState = profileCubit.state;
+    if (profileState is! ProfileLoaded) {
+      return;
+    }
+    final profileUser = profileState.profileUser;
+    final isFollowing = profileUser.followers.contains(currentUser!.uid);
+
+    // optimistically update the ui
+    setState(() {
+      if (isFollowing) {
+        profileUser.followers.remove(currentUser!.uid);
+      } else {
+        profileUser.followers.add(currentUser!.uid);
+      }
+    });
+
+    // toggle follow in cubit
+    profileCubit.toggleFollow(currentUser!.uid, widget.uid).catchError((error) {
+      setState(() {
+        if (isFollowing) {
+          profileUser.followers.add(currentUser!.uid);
+        } else {
+          profileUser.followers.remove(currentUser!.uid);
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // is own profile?
+    bool ifOwnProfile = currentUser?.uid == widget.uid;
+
     return BlocBuilder<ProfileCubit, ProfileStates>(builder: (context, state) {
       // if state is loaded, show Profile Screen
       if (state is ProfileLoaded) {
@@ -57,17 +89,18 @@ class _ProfilePageState extends State<ProfilePage> {
             centerTitle: true,
             actions: [
               // Edit Profile Button
-              IconButton(
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditProfilePage(user: loadedUser),
-                    )),
-                icon: Icon(
-                  Icons.edit,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              )
+              if (ifOwnProfile)
+                IconButton(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(user: loadedUser),
+                      )),
+                  icon: Icon(
+                    Icons.edit,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                )
             ],
           ),
 
@@ -115,12 +148,18 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              const SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
 
               // follow unfollow button
-              CFollowButton(isFollowing: false, onPressed: () {}),
+
+              if (!ifOwnProfile)
+                CFollowButton(
+                  isFollowing: loadedUser.followers.contains(currentUser!.uid),
+                  onPressed: pressFollowButton,
+                ),
+
+              const SizedBox(height: 25),
+
               // Bio of the user
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
